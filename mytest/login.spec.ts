@@ -1,9 +1,7 @@
-/* eslint-disable unused-imports/no-unused-vars */
-/* eslint-disable unused-imports/no-unused-imports */
 import { test, expect, Browser, Page, Locator } from "@playwright/test";
-import { webkit, firefox, chromium } from "playwright";
+import { firefox, chromium } from "playwright";
 
-test.describe("OrangeHRM Tests", () => {
+test.describe("OrangeHRM Login", () => {
     test("Login Test", async () => {
         //Open Browser
         const brow: Browser = await chromium.launch({ headless: false });
@@ -14,8 +12,10 @@ test.describe("OrangeHRM Tests", () => {
             "https://opensource-demo.orangehrmlive.com/web/index.php/auth/login",
         );
         //Create 3 Locators: Username, Password, Login Button
-        const username: Locator = page.locator("#username");
-        const password: Locator = page.locator("#password");
+        const username: Locator = page.getByRole("textbox", {
+            name: "Username",
+        });
+        const password: Locator = page.locator("#Password");
         const loginButton: Locator = page.locator("value=Login]");
         //Enter Username, Password and Click Login Button
         await username.fill("Admin");
@@ -27,7 +27,7 @@ test.describe("OrangeHRM Tests", () => {
         expect.soft(pageTitle).toBe("OrangeHRM");
         //Take a Screenshot
         await page.screenshot({ path: "/test-results/OrangeHRMLogin.png" });
-        // Close the Browser
+        //Close the Browser
         await brow.close();
     });
 });
