@@ -3,7 +3,8 @@
 import { test, expect } from "@playwright/test";
 
 test.describe("OrangeHRM Demo Tests", () => {
-    const baseURL = "https://opensource-demo.orangehrmlive.com/";
+    const baseURL =
+        "https://opensource-demo.orangehrmlive.com/web/index.php/auth/login";
 
     test("Login and verify dashboard", async ({ page }) => {
         // Go to OrangeHRM demo site

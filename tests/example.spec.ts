@@ -1,3 +1,4 @@
+/* eslint-disable playwright/require-soft-assertions */
 import { test, expect } from "@playwright/test";
 
 test("has title", async ({ page }) => {
@@ -10,7 +11,7 @@ test("has title", async ({ page }) => {
 test("get started link", async ({ page }) => {
     await page.goto("https://playwright.dev/");
 
-    await page.pause(); // Pause to inspect the page if needed
+    //await page.pause(); // Pause to inspect the page if needed
 
     // Click the get started link.
     await page.getByRole("link", { name: "Get started" }).click();
