@@ -5,10 +5,10 @@ import { login } from "../helpers/auth"; // Import reusable login function
 test.describe("OrangeHRM Login Testing", () => {
     test("OrangeHRMLogin", async ({ page }) => {
         // Launch browser
-        const browser = await chromium.launch({
+        /*const browser = await chromium.launch({
             headless: false, // Show browser UI
             slowMo: 2000, // Slow down actions by 2s
-        });
+        });*/
 
         await login(page);
 
@@ -36,6 +36,6 @@ test.describe("OrangeHRM Login Testing", () => {
         await page.screenshot({ path: "test-results/OrangeHRMLogout.png" });
 
         // Close the browser
-        await browser.close();
+        //await browser.close();
     });
 });

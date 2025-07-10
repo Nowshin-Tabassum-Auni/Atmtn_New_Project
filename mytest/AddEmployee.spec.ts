@@ -1,37 +1,51 @@
 import { test, expect } from "@playwright/test";
 import { login } from "../helpers/auth";
+import { generateRandomEmployeeData } from "../helpers/dataGenerator";
 
 test.use({
-    launchOptions: {
-        slowMo: 3000, // Slow down each action by 3 second
-        headless: false, // Show browser UI
-    },
+    launchOptions: { slowMo: 2000 },
 });
 
 test.describe("OrangeHRM Add Employee Testing", () => {
-    test("Add Employee", async ({ page }) => {
+    test("Create Employee", async ({ page }) => {
         // Login
         await login(page);
 
-        // Navigate to the Add Employee page
-        await page.goto(
-            "https://opensource-demo.orangehrmlive.com/web/index.php/pim/addEmployee",
-        );
+        // Generate random employee data
+        const employee = generateRandomEmployeeData();
+
+        // Navigate via PIM → Add Employee
+        await page.getByRole("link", { name: "PIM" }).click();
+        await page.getByRole("link", { name: "Add Employee" }).click();
 
         // Fill in employee details
-        await page.getByPlaceholder("First name").fill("Nowshin");
-        await page.getByPlaceholder("Middle name").fill("T");
-        await page.getByPlaceholder("Last name").fill("Auni");
+        await page.getByPlaceholder("First Name").fill(employee.firstName);
+        await page.getByPlaceholder("Middle Name").fill(employee.middleName);
+        await page.getByPlaceholder("Last Name").fill(employee.lastName);
 
-        // Generate a random employee ID
-        const employeeId = Math.floor(1000 + Math.random() * 9000).toString();
-        await page.getByPlaceholder("Employee Id").fill(employeeId);
+        // Enable "Create Login Details" toggle
+        await page.locator("form span").first().click();
+        // eslint-disable-next-line playwright/no-page-pause
+        const usernameInput = page.locator(
+            "div:nth-child(4) > .oxd-grid-2 > div > .oxd-input-group > div:nth-child(2) > .oxd-input",
+        );
+        //await usernameInput.waitFor({ state: "visible", timeout: 5000 });
 
-        // Click the Save button
+        await usernameInput.fill(employee.username);
+        await page.getByPlaceholder("Password").fill(employee.password);
+        await page.getByPlaceholder("Confirm Password").fill(employee.password);
+
+        // Save
         await page.getByRole("button", { name: "Save" }).click();
 
-        // Verify employee is added (adjust selector if needed)
-        await expect.soft(page.getByText("Successfully Saved")).toBeVisible();
+        // Verify employee is added
+        await expect
+            .soft(
+                page.getByRole("heading", {
+                    name: `${employee.firstName} ${employee.lastName}`,
+                }),
+            )
+            .toBeVisible({ timeout: 10000 });
 
         // Screenshot
         await page.screenshot({ path: "test-results/AddEmployee.png" });
