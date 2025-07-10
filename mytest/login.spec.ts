@@ -1,33 +1,41 @@
-import { test, expect, Browser, Page, Locator } from "@playwright/test";
-import { firefox, chromium } from "playwright";
+/* eslint-disable quotes */
+import { test, expect, chromium } from "@playwright/test";
+import { login } from "../helpers/auth"; // Import reusable login function
 
-test.describe("OrangeHRM Login", () => {
-    test("Login Test", async () => {
-        //Open Browser
-        const brow: Browser = await chromium.launch({ headless: false });
-        //Open Page
-        const page: Page = await brow.newPage();
-        //Go to the URL
-        await page.goto(
-            "https://opensource-demo.orangehrmlive.com/web/index.php/auth/login",
-        );
-        //Create 3 Locators: Username, Password, Login Button
-        const username: Locator = page.getByRole("textbox", {
-            name: "Username",
+test.describe("OrangeHRM Login Testing", () => {
+    test("OrangeHRMLogin", async ({ page }) => {
+        // Launch browser
+        const browser = await chromium.launch({
+            headless: false, // Show browser UI
+            slowMo: 2000, // Slow down actions by 2s
         });
-        const password: Locator = page.locator("#Password");
-        const loginButton: Locator = page.locator("value=Login]");
-        //Enter Username, Password and Click Login Button
-        await username.fill("Admin");
-        await password.fill("admin123");
-        await loginButton.click();
-        //Verify the Title
-        const pageTitle = await page.title();
-        console.log("NTA's Page Title: ", pageTitle);
-        expect.soft(pageTitle).toBe("OrangeHRM");
-        //Take a Screenshot
-        await page.screenshot({ path: "/test-results/OrangeHRMLogin.png" });
-        //Close the Browser
-        await brow.close();
+
+        await login(page);
+
+        // Verify the page title
+        await expect.soft(page).toHaveTitle("OrangeHRM");
+
+        // Verify the URL contains "/dashboard"
+        await expect.soft(page).toHaveURL(/dashboard/);
+
+        // Take a screenshot after login
+        await page.screenshot({ path: "test-results/OrangeHRMLogin.png" });
+
+        // Click the user dropdown and logout
+        await page.locator("span.oxd-userdropdown-tab").click();
+        await page.locator('a[href="/web/index.php/auth/logout"]').click();
+
+        // Verify redirect back to login page
+        await expect
+            .soft(page)
+            .toHaveURL(
+                "https://opensource-demo.orangehrmlive.com/web/index.php/auth/login",
+            );
+
+        // Take a screenshot after logout
+        await page.screenshot({ path: "test-results/OrangeHRMLogout.png" });
+
+        // Close the browser
+        await browser.close();
     });
 });
