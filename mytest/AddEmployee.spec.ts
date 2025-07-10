@@ -10,7 +10,7 @@ test.use({
 
 test.describe("OrangeHRM Add Employee Testing", () => {
     test("Add Employee", async ({ page }) => {
-        // Login first
+        // Login
         await login(page);
 
         // Navigate to the Add Employee page
@@ -19,8 +19,13 @@ test.describe("OrangeHRM Add Employee Testing", () => {
         );
 
         // Fill in employee details
-        await page.getByRole("textbox", { name: "First Name" }).fill("Nowshin");
-        await page.getByRole("textbox", { name: "Last Name" }).fill("T Auni");
+        await page.getByPlaceholder("First name").fill("Nowshin");
+        await page.getByPlaceholder("Middle name").fill("T");
+        await page.getByPlaceholder("Last name").fill("Auni");
+
+        // Generate a random employee ID
+        const employeeId = Math.floor(1000 + Math.random() * 9000).toString();
+        await page.getByPlaceholder("Employee Id").fill(employeeId);
 
         // Click the Save button
         await page.getByRole("button", { name: "Save" }).click();
