@@ -1,3 +1,4 @@
+/* eslint-disable quotes */
 import { test, expect } from "@playwright/test";
 import { login } from "../helpers/auth";
 import { generateRandomEmployeeData } from "../helpers/dataGenerator";
@@ -26,14 +27,20 @@ test.describe("OrangeHRM Add Employee Testing", () => {
         // Enable "Create Login Details" toggle
         await page.locator("form span").first().click();
         // eslint-disable-next-line playwright/no-page-pause
+
+        // Fill in Username, Password, and Confirm Password
         const usernameInput = page.locator(
             "div:nth-child(4) > .oxd-grid-2 > div > .oxd-input-group > div:nth-child(2) > .oxd-input",
         );
-        //await usernameInput.waitFor({ state: "visible", timeout: 5000 });
-
         await usernameInput.fill(employee.username);
-        await page.getByPlaceholder("Password").fill(employee.password);
-        await page.getByPlaceholder("Confirm Password").fill(employee.password);
+        await page
+            .locator('input[type="password"]')
+            .first()
+            .fill(employee.password);
+        await page
+            .locator('input[type="password"]')
+            .nth(1)
+            .fill(employee.password);
 
         // Save
         await page.getByRole("button", { name: "Save" }).click();

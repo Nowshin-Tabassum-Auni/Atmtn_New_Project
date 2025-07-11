@@ -12,7 +12,7 @@ export function generateRandomEmployeeData() {
     const password = faker.internet.password({
         length: 8,
         pattern: /[A-Za-z0-9]/,
-        prefix: "!", // every password will start with '!'
+        prefix: "!7", // every password will start with '!'
     });
 
     return {
