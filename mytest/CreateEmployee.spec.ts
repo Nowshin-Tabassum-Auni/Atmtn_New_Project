@@ -29,10 +29,12 @@ test.describe("OrangeHRM Add Employee Testing", () => {
         // eslint-disable-next-line playwright/no-page-pause
 
         // Fill in Username, Password, and Confirm Password
-        const usernameInput = page.locator(
-            "div:nth-child(4) > .oxd-grid-2 > div > .oxd-input-group > div:nth-child(2) > .oxd-input",
-        );
-        await usernameInput.fill(employee.username);
+        await page
+            .locator(
+                "div:nth-child(4) > .oxd-grid-2 > div > .oxd-input-group > div:nth-child(2) > .oxd-input",
+            )
+            .fill(employee.username);
+        //await usernameInput.fill(employee.username);
         await page
             .locator('input[type="password"]')
             .first()
