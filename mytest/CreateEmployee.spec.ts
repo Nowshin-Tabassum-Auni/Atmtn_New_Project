@@ -52,7 +52,7 @@ test.describe("OrangeHRM Add Employee Testing", () => {
                     name: `${employee.firstName} ${employee.lastName}`,
                 }),
             )
-            .toBeVisible({ timeout: 10000 });
+            .toBeVisible();
 
         // Screenshot
         await page.screenshot({ path: "test-results/AddEmployee.png" });
